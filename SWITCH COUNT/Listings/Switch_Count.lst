@@ -1,0 +1,96 @@
+C51 COMPILER V9.60.7.0   SWITCH_COUNT                                                      09/26/2026 16:32:42 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE SWITCH_COUNT
+OBJECT MODULE PLACED IN .\Objects\Switch_Count.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Switch_Count.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listi
+                    -ngs\Switch_Count.lst) TABS(2) OBJECT(.\Objects\Switch_Count.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          // Define our push button switch on Port 3, Pin 2
+   4          sbit button = P3^3; 
+   5          
+   6          void delay(unsigned int ms) {
+   7   1          unsigned int i, j;
+   8   1          for(i = 0; i < ms; i++)
+   9   1              for(j = 0; j < 112; j++);
+  10   1      }
+  11          
+  12          // Single Master Common Anode Array for Digits 0-9
+  13          unsigned char ca_display[] = {0xC0, 0xF9, 0xA4, 0xB0, 0x99, 0x92, 0x82, 0xF8, 0x80, 0x90};
+  14          
+  15          void main() {
+  16   1          unsigned char hundreds = 0;
+  17   1          unsigned char tens = 0;
+  18   1          unsigned char units = 0;
+  19   1        
+  20   1        // 3. Wait here until you release the button (prevents rapid auto-running)
+  21   1      while(button == 0) {
+  22   2          // Refresh Port 0 first to force its open-drain pins to settle
+  23   2          P0 = ca_display[units];    
+  24   2          P1 = ca_display[tens];     
+  25   2          P2 = ca_display[hundreds]; 
+  26   2      }
+  27   1      
+  28   1      
+  29   1          // Ensure the button pin is configured as an input pin (set to 1)
+  30   1          button = 1;
+  31   1      
+  32   1          while(1) {
+  33   2              // Continuously refresh displays with current values
+  34   2              P0 = ca_display[hundreds]; 
+  35   2              P1 = ca_display[tens];     
+  36   2              P2 = ca_display[units];    
+  37   2              
+  38   2              // Check if the button is pressed (goes LOW)
+  39   2              if (button == 0) {
+  40   3                  delay(20); // 1. Debounce delay: wait for mechanical contact bounce to settle
+  41   3                  
+  42   3                  if (button == 0) { // Double check if it's still pressed
+  43   4                      
+  44   4                      // 2. Increment counting arithmetic logic
+  45   4                      units++;
+  46   4                      if(units > 9) {
+  47   5                          units = 0;
+  48   5                          tens++;
+  49   5                          if(tens > 9) {
+  50   6                              tens = 0;
+  51   6                              hundreds++;
+  52   6                              if(hundreds > 9) {
+  53   7                                  hundreds = 0; 
+  54   7                              }
+C51 COMPILER V9.60.7.0   SWITCH_COUNT                                                      09/26/2026 16:32:42 PAGE 2   
+
+  55   6                          }
+  56   5                      }
+  57   4                      
+  58   4                      // 3. Wait here until you release the button (prevents rapid auto-running)
+  59   4                      while(button == 0) {
+  60   5                          // Keep keeping the displays lit while holding down the button
+  61   5                          P2 = ca_display[hundreds]; 
+  62   5                          P1 = ca_display[tens];     
+  63   5                          P0 = ca_display[units];
+  64   5                      }
+  65   4                      
+  66   4                      delay(20); // Small delay after release to prevent release bounce
+  67   4                  }
+  68   3              }
+  69   2          }
+  70   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    174    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     10       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

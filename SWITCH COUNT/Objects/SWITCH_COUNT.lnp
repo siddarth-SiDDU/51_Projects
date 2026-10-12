@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\Switch_Count.obj" 
+TO ".\Objects\SWITCH_COUNT" 
+PRINT(".\Listings\SWITCH_COUNT.m51") RAMSIZE(256) 

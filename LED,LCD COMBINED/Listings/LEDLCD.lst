@@ -1,0 +1,112 @@
+C51 COMPILER V9.60.7.0   LEDLCD                                                            09/16/2026 20:21:21 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE LEDLCD
+OBJECT MODULE PLACED IN .\Objects\LEDLCD.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE LEDLCD.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\LE
+                    -DLCD.lst) TABS(2) OBJECT(.\Objects\LEDLCD.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define DataBus P1
+   3          sbit RS = P2^0;
+   4          sbit EN = P2^1;
+   5          
+   6          
+   7          /* Function declarations */
+   8          void delay_ms(unsigned int itime);
+   9          void LCD_Init(void);
+  10          void LCD_WriteCommand(unsigned char cmd);
+  11          void LCD_WriteData(unsigned char dat);
+  12          void LCD_DisplayString(unsigned char *string_ptr);
+  13            
+  14          /* Delay function */
+  15          void delay_ms(unsigned int itime)
+  16          {
+  17   1          unsigned int i, j;
+  18   1          for(i = 0; i < itime; i++)
+  19   1          for(j = 0; j < 200; j++);
+  20   1      }
+  21          
+  22          /* Send command to LCD */
+  23          void LCD_WriteCommand(unsigned char cmd)
+  24          {
+  25   1          DataBus = cmd;
+  26   1          RS = 0;                 
+  27   1          EN = 1;
+  28   1          delay_ms(1);
+  29   1          EN = 0;
+  30   1          delay_ms(2);
+  31   1      }
+  32          
+  33          
+  34          /* Send data to LCD */
+  35          void LCD_WriteData(unsigned char dat)
+  36          {
+  37   1          DataBus = dat;
+  38   1          RS = 1;                 
+  39   1          EN = 1;
+  40   1          delay_ms(1);
+  41   1          EN = 0;
+  42   1          delay_ms(2);
+  43   1      }
+  44          
+  45          
+  46          /* LCD initialization */
+  47          void LCD_Init(void)
+  48          {
+  49   1          delay_ms(20);           // Power-up delay
+  50   1          LCD_WriteCommand(0x38); // 8-bit mode, 2 lines, 5x7
+  51   1          LCD_WriteCommand(0x0C); // Display ON, cursor OFF
+  52   1          LCD_WriteCommand(0x01); // Clear display
+  53   1          LCD_WriteCommand(0x06); // Cursor moves right
+  54   1          LCD_WriteCommand(0x80); // First line, first position
+C51 COMPILER V9.60.7.0   LEDLCD                                                            09/16/2026 20:21:21 PAGE 2   
+
+  55   1          delay_ms(5);
+  56   1      }
+  57          
+  58          
+  59          /* Display string */
+  60          void LCD_DisplayString(unsigned char *string_ptr)
+  61          {
+  62   1          while(*string_ptr)
+  63   1          {
+  64   2              LCD_WriteData(*string_ptr);
+  65   2              string_ptr++;
+  66   2          }
+  67   1      }
+  68          
+  69          
+  70          /* Main */
+  71          void main(void)
+  72          {
+  73   1          LCD_Init();
+  74   1          LCD_WriteCommand(0x80);
+  75   1          LCD_DisplayString("WELCOME TO MY");
+  76   1          LCD_WriteCommand(0xC0);
+  77   1        LCD_DisplayString("  LINKEDIN :)  ");
+  78   1        
+  79   1        while(1)
+  80   1        {
+  81   2          P0 = 0xAA;
+  82   2          delay_ms(50);
+  83   2          P0 = 0x55;
+  84   2          delay_ms(50);
+  85   2        }
+  86   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    187    ----
+   CONSTANT SIZE    =     30    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
