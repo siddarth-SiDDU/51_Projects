@@ -1,0 +1,50 @@
+C51 COMPILER V9.60.7.0   7_SEGMENT_DISPLAY                                                 09/26/2026 14:41:57 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE 7_SEGMENT_DISPLAY
+OBJECT MODULE PLACED IN .\Objects\7_segment_display.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE 7_segment_display.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\
+                    -Listings\7_segment_display.lst) TABS(2) OBJECT(.\Objects\7_segment_display.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          void delay(unsigned int ms) 
+   3          {
+   4   1          unsigned int i, j;
+   5   1          for(i = 0; i < ms; i++)
+   6   1          for(j = 0; j < 112; j++);
+   7   1      }
+   8          
+   9          void main() {
+  10   1          // Exact same common anode lookup values
+  11   1          unsigned char ca_codes[] = {0xC0, 0xF9, 0x99, 0xF8, 0xC0 }; 
+  12   1          unsigned char cb_codes[] = {0xC0, 0xA4, 0x92, 0x80, 0xC0 }; 
+  13   1          unsigned char cc_codes[] = {0xC0, 0xB0, 0x82, 0x90, 0xC0 }; 
+  14   1          unsigned char count;
+  15   1          while(1) 
+  16   1              {
+  17   2              for(count = 0; count < 5; count++) 
+  18   2              {
+  19   3                  P0 = ca_codes[count]; 
+  20   3                  P1 = cb_codes[count]; 
+  21   3                  P2 = cc_codes[count];
+  22   3                  delay(500);
+  23   3      
+  24   3              }
+  25   2          }
+  26   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    125    ----
+   CONSTANT SIZE    =     15    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      15
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
